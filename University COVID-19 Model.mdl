@@ -1,0 +1,588 @@
+{UTF-8}
+Low Risk Travel Population=
+	(1/3)*Total Student Population
+	~	
+	~		|
+
+High Risk Travel Population=
+	(1/3)*Total Student Population
+	~	
+	~		|
+
+Medium Risk Travel Population=
+	(1/3)*Total Student Population
+	~	
+	~		|
+
+Active Community Infections= INTEG (
+	(Infecting Residents*testing accuracy)-Quarantining Residents,
+		Existing Infected Residents)
+	~	people
+	~		|
+
+Exposing Residents=
+	Resident to Resident Contact Density Fraction*Fraction of Susceptible Residents*Active Community Infections\
+		*Community and Student Contact Proportionality Constant
+	~	people/day
+	~		|
+
+Exposing Students=
+	Active Infected Students*Student to Student Contact Density Fraction*Fraction of Susceptible Students\
+		*Community and Student Contact Proportionality Constant
+	~	people/day
+	~		|
+
+Community and Student Contact Proportionality Constant=
+	1.1
+	~	Dmnl
+	~	The degree at which residents and students interact with each other. Are \
+		there shared crowded areas? Shared work spaces?
+	|
+
+Community Deaths= INTEG (
+	Dying Residents,
+		0)
+	~	people
+	~	The number of people in the community that have died from the virus.
+	|
+
+Community Susceptibles= INTEG (
+	-Exposing Residents,
+		Community Population)
+	~	people [0,?]
+	~	The number of people living in the community that are susceptible to \
+		COVID-19. The input data would be the population of the given town or city.
+	|
+
+Quarantined Community Infections= INTEG (
+	Quarantining Residents-Dying Residents-Recovering Residents,
+		0)
+	~	
+	~		|
+
+Community Recoveries= INTEG (
+	Recovering Residents,
+		0)
+	~	people
+	~		|
+
+Recovering Residents=
+	Quarantined Community Infections/Infection Duration
+	~	
+	~		|
+
+Community Transmission Rate=
+	R0*Resident Behavioral Risk Fraction
+	~	1/day
+	~		|
+
+Dying Residents=
+	Quarantined Community Infections*Community Fatality Rate/Infection Duration
+	~	people/day
+	~		|
+
+Infecting Students=
+	Exposed Students*Student Transmission Rate
+	~	
+	~		|
+
+Quarantining Residents=
+	Active Community Infections/Average Time for Symptoms to Onset
+	~	
+	~		|
+
+Exposed Community= INTEG (
+	Exposing Residents-Infecting Residents,
+		0)
+	~	
+	~		|
+
+Infecting Residents=
+	Community Transmission Rate*Exposed Community
+	~	people/day
+	~		|
+
+Resident to Resident Contact Density Fraction=
+	0.1
+	~	
+	~	This fraction signifies the extent at which community interactions occur. \
+		Are there numerous crowded areas? Frequent person-to-person interactions?
+	|
+
+Student to Student Contact Density Fraction=
+	0.2
+	~	
+	~	This fraction signifies the extent at which on-campus interactions occur. \
+		Are there numerous crowded areas? Frequent person-to-person interactions?
+	|
+
+Active Infected Students= INTEG (
+	(Infecting Students*testing accuracy)-Quarantining Students,
+		Total Infected Returning Students)
+	~	people
+	~	"Not quarantined"
+	|
+
+Exposed Students= INTEG (
+	Exposing Students-Infecting Students,
+		0)
+	~	people
+	~		|
+
+Dying Students=
+	Quarantined Infected Students*Student Fatality Rate/Infection Duration
+	~	people/day
+	~		|
+
+Student Recoveries= INTEG (
+	Recovering Students,
+		0)
+	~	
+	~		|
+
+Quarantined Infected Students= INTEG (
+	Quarantining Students-Dying Students-Recovering Students,
+		0)
+	~	
+	~		|
+
+Student Deaths= INTEG (
+	Dying Students,
+		0)
+	~	
+	~		|
+
+Recovering Students=
+	Quarantined Infected Students/Infection Duration
+	~	
+	~		|
+
+Remote Student Population=
+	0
+	~	people
+	~	The number of students enrolled who are currently taking classes remotely.
+	|
+
+Susceptible Students= INTEG (
+	-Exposing Students,
+		Total Student Population-Remote Student Population)
+	~	people [0,?]
+	~	The number of students living on-campus and in the surrounding community \
+		that are susceptible to the virus. The input data would be the student \
+		body population who attend on-campus classes.
+	|
+
+Quarantining Students=
+	Active Infected Students/Average Time for Symptoms to Onset
+	~	
+	~		|
+
+Total Infected Students from Hometown=
+	(High Risk Area Fraction*High Risk Area Population)+(Medium Risk Area Fraction*Medium Risk Area Population\
+		)+(
+	Low Risk Area Fraction*Low Risk Area Population)
+	~	people
+	~		|
+
+Student Transmission Rate=
+	R0*Student Behavioral Risk Fraction
+	~	
+	~		|
+
+Community Fatality Rate=
+	0.004
+	~	people/day
+	~		|
+
+Medium Risk Area Fraction=
+	0.001
+	~	Dmnl
+	~		|
+
+Fraction of Susceptible Residents=
+	Community Susceptibles/Community Population
+	~	
+	~		|
+
+Fraction of Susceptible Students=
+	Susceptible Students/Total Student Population
+	~	
+	~		|
+
+High Risk Area Fraction=
+	0.01
+	~	Dmnl
+	~		|
+
+High Risk Area Population=
+	(1/3)*Total Student Population
+	~	people
+	~		|
+
+High Travel Risk Fraction=
+	0.005
+	~	
+	~		|
+
+Infection Duration=
+	14
+	~	days [14,42]
+	~	The number of days it takes to recover from the virus.
+	|
+
+Low Risk Area Fraction=
+	0.0005
+	~	Dmnl
+	~		|
+
+Low Risk Area Population=
+	(1/3)*Total Student Population
+	~	people
+	~		|
+
+Low Travel Risk Fraction=
+	0.0001
+	~	
+	~		|
+
+Total Infected Students from Travel=
+	(High Travel Risk Fraction*High Risk Travel Population)+(Medium Travel Risk Fraction\
+		*Medium Risk Travel Population)+(Low Travel Risk Fraction*Low Risk Travel Population\
+		)
+	~	
+	~		|
+
+Student Fatality Rate=
+	0.002
+	~	 [0,1]
+	~		|
+
+Medium Risk Area Population=
+	(1/3)*Total Student Population
+	~	people
+	~		|
+
+Resident Behavioral Risk Fraction=
+	0.1
+	~	
+	~		|
+
+Medium Travel Risk Fraction=
+	0.0005
+	~	
+	~		|
+
+Moving in Infected Students=
+	Total Infected Students from Hometown+Total Infected Students from Travel
+	~	
+	~		|
+
+testing accuracy=
+	0.97
+	~	 [0,1]
+	~	The accuracy of a COVID-19 test to correctly indicate positive .
+	|
+
+Student Behavioral Risk Fraction=
+	0.2
+	~	N/A [0,1]
+	~	The capacity at which students are exercising proper preventative \
+		measures, i.e. social distancing, wearing masks, handwashing, and other \
+		behavioral measures.
+	|
+
+Total Infected Returning Students=
+	Moving in Infected Students*"Returning with COVID-19 Probability"
+	~	people [0,?]
+	~	The number of students who return to campus infected from an outside \
+		source.
+	|
+
+Community Population=
+	7000
+	~	people [0,?]
+	~	The susceptible number of people living in the town or city.
+	|
+
+Existing Infected Residents=
+	8
+	~	people
+	~		|
+
+R0=
+	2.5
+	~	1/day
+	~	Base reproduction ratio for the virus, meaning for every person infected, \
+		they are likely to spread it to approximately 5.7 other people. \
+		https://www.researchgate.net/publication/341781714_Basic_Epidemiological_Pa\
+		rameters_at_the_end_of_the_5th_month_of_the_COVID-19_Outbreak
+	|
+
+"Returning with COVID-19 Probability"=
+	0.1
+	~	N/A
+	~	This is the probability that students return with the virus.
+	|
+
+Total Student Population=
+	1829
+	~	people
+	~	The number of students living on-campus or in the surrounding community.
+	|
+
+Average Time for Symptoms to Onset=
+	6
+	~	days [2,14]
+	~	The number of days it takes for COVID-19 symptoms to appear.
+	|
+
+********************************************************
+	.Control
+********************************************************~
+		Simulation Control Parameters
+	|
+
+FINAL TIME  = 96
+	~	Month
+	~	The final time for the simulation.
+	|
+
+INITIAL TIME  = 0
+	~	Month
+	~	The initial time for the simulation.
+	|
+
+SAVEPER  = 
+        TIME STEP
+	~	Month [0,?]
+	~	The frequency with which output is stored.
+	|
+
+TIME STEP  = 1
+	~	Month [0,?]
+	~	The time step for the simulation.
+	|
+
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*View 1
+$192-192-192,0,Roboto|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,60,0
+10,1,Community Susceptibles,796,336,54,23,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|0-128-0,0,0,0,0,0,0
+10,2,Active Community Infections,1195,337,53,27,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|255-128-0,0,0,0,0,0,0
+10,3,Community Recoveries,1636,335,52,21,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|0-0-255,0,0,0,0,0,0
+10,4,Community Deaths,1405,224,55,25,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|255-0-0,0,0,0,0,0,0
+10,5,Susceptible Students,797,487,52,21,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|0-128-0,0,0,0,0,0,0
+10,6,Active Infected Students,1185,485,52,24,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|255-128-0,0,0,0,0,0,0
+10,7,Student Recoveries,1640,480,45,22,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|0-0-255,0,0,0,0,0,0
+10,8,Student Deaths,1390,634,44,21,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|255-0-0,0,0,0,0,0,0
+12,9,0,1100,141,168,26,8,135,0,26,0,0,0,0,-1--1--1,0-0-0,|20|BU|0-128-255,0,0,0,0,0,0
+University COVID-19 Model
+12,10,0,304,381,46,10,8,135,0,16,-1,0,0,0,-1--1--1,0-0-0,|12|B|0-0-0,0,0,0,0,0,0
+Legend
+12,11,0,306,407,100,11,8,135,0,26,-1,0,0,0,-1--1--1,0-0-0,|10|B|0-128-0,0,0,0,0,0,0
+Environment Dependent Data
+10,12,Community Population,642,417,34,15,8,131,0,10,0,0,0,0,-1--1--1,0-0-0,|10||0-128-0,0,0,0,0,0,0
+1,13,12,1,1,0,0,0,2,64,1,-1--1--1,|12||0-0-0,1|(727,410)|
+10,14,Total Student Population,640,472,50,18,8,131,0,10,0,0,0,0,-1--1--1,0-0-0,|10||0-128-0,0,0,0,0,0,0
+1,15,14,5,1,0,0,0,0,64,1,-1--1--1,,1|(658,467)|
+10,16,Community Transmission Rate,1060,263,57,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,17,Student Transmission Rate,1060,609,57,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,18,Existing Infected Residents,1211,241,50,15,8,3,0,10,0,0,0,0,-1--1--1,0-0-0,|10||0-128-0,0,0,0,0,0,0
+1,19,18,2,0,0,0,0,3,64,1,255-0-0,|12||0-0-0,1|(1205,276)|
+10,20,Total Infected Returning Students,1181,580,57,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-128-0,0,0,0,0,0,0
+1,21,20,6,1,0,0,0,3,64,1,255-0-0,|12||0-0-0,1|(1189,546)|
+10,22,R0,1103,196,11,9,8,3,0,26,0,0,0,0,-1--1--1,0-0-0,|10|B|255-0-0,0,0,0,0,0,0
+12,23,0,304,453,115,6,8,135,0,26,-1,0,0,0,-1--1--1,0-0-0,|10|B|255-0-0,0,0,0,0,0,0
+COVID-19 Characteristics
+1,24,22,16,1,0,0,0,2,64,0,-1--1--1,|12||0-0-0,1|(1083,215)|
+10,25,R0,1098,675,20,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,26,25,17,1,0,0,0,0,64,0,-1--1--1,,1|(1091,647)|
+10,27,"Returning with COVID-19 Probability",1286,658,53,21,8,131,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+1,28,27,20,1,0,0,0,0,64,0,-1--1--1,,1|(1224,627)|
+10,29,Average Time for Symptoms to Onset,1283,435,60,20,8,131,0,10,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0,0,0,0,0,0,0
+10,30,Moving in Infected Students,1187,678,54,15,8,131,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+1,31,30,20,1,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1161,631)|
+10,32,Infection Duration,1400,435,53,9,8,3,0,10,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0,0,0,0,0,0,0
+10,33,Fraction of Susceptible Students,575,566,36,22,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+1,34,14,33,1,0,0,0,0,64,0,-1--1--1,,1|(565,510)|
+10,35,Fraction of Susceptible Residents,579,345,36,22,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+1,36,12,35,1,0,0,0,2,64,0,-1--1--1,|12||0-0-0,1|(595,387)|
+1,37,5,33,1,0,0,0,0,64,0,-1--1--1,,1|(679,570)|
+1,38,1,35,1,0,0,0,2,64,0,-1--1--1,|12||0-0-0,1|(680,363)|
+12,39,0,1878,320,150,150,3,188,0,0,2,0,0,0,0,0,0,0,0,0
+Community Susceptibles,Graph
+12,40,0,1875,621,150,150,3,44,0,0,2,0,0,0,0,0,0,0,0,0
+Community Recoveries,Graph
+12,41,0,1878,924,150,150,3,44,0,0,2,0,0,0,0,0,0,0,0,0
+Active Community Infections,Graph
+12,42,0,1343,1228,150,150,3,44,0,0,2,0,0,0,0,0,0,0,0,0
+Susceptible Students,Graph
+12,43,0,1037,1227,150,150,3,44,0,0,2,0,0,0,0,0,0,0,0,0
+Active Infected Students,Graph
+12,44,0,727,1228,150,150,3,44,0,0,2,0,0,0,0,0,0,0,0,0
+Student Recoveries,Graph
+10,45,Student Behavioral Risk Fraction,1015,677,56,19,8,131,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,46,Student Fatality Rate,1419,733,47,15,8,3,0,10,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0,0,0,0,0,0,0
+10,47,Community Fatality Rate,1609,197,37,15,8,131,0,10,0,0,0,0,-1--1--1,0-0-0,|10||255-0-0,0,0,0,0,0,0
+12,48,0,419,1229,150,150,3,44,0,0,1,0,0,0,0,0,0,0,0,0
+Student_Deaths
+1,49,45,17,1,0,0,0,0,64,0,-1--1--1,,1|(1041,651)|
+10,50,Resident Behavioral Risk Fraction,936,194,59,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+1,51,50,16,1,0,0,0,2,64,0,-1--1--1,|12||0-0-0,1|(1013,250)|
+10,52,testing accuracy,1186,411,49,9,8,131,0,10,0,0,0,0,-1--1--1,0-0-0,|10||255-128-0,0,0,0,0,0,0
+1,53,52,6,1,0,0,0,0,64,0,-1--1--1,,1|(1168,425)|
+10,54,High Travel Risk Fraction,1026,919,49,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,55,Medium Travel Risk Fraction,881,917,45,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,56,Low Travel Risk Fraction,731,917,48,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,57,High Risk Area Fraction,1131,911,44,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,58,Medium Risk Area Fraction,1363,912,40,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,59,Low Risk Area Fraction,1573,915,43,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,60,High Risk Travel Population,970,960,49,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,61,Medium Risk Travel Population,842,961,52,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,62,Low Risk Travel Population,710,962,48,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,63,Total Infected Students from Travel,1009,760,43,22,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+1,64,56,63,1,0,0,0,0,64,0,-1--1--1,,1|(804,815)|
+1,65,62,63,1,0,0,0,0,64,0,-1--1--1,,1|(849,888)|
+1,66,61,63,1,0,0,0,0,64,0,-1--1--1,,1|(964,896)|
+1,67,55,63,1,0,0,0,0,64,0,-1--1--1,,1|(954,845)|
+1,68,60,63,1,0,0,0,0,64,0,-1--1--1,,1|(1015,864)|
+1,69,54,63,1,0,0,0,0,64,0,-1--1--1,,1|(1052,864)|
+10,70,High Risk Area Population,1115,955,44,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,71,Medium Risk Area Population,1347,956,55,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,72,Low Risk Area Population,1556,955,43,15,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+10,73,Total Student Population,1039,1041,61,20,8,130,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,74,73,70,1,0,0,0,0,64,0,-1--1--1,,1|(1098,1006)|
+1,75,73,71,1,0,0,0,0,64,0,-1--1--1,,1|(1237,1015)|
+1,76,73,72,1,0,0,0,0,64,0,-1--1--1,,1|(1370,1035)|
+10,77,Total Infected Students from Hometown,1362,827,43,22,8,3,0,8,0,0,0,0,-1--1--1,0-0-0,|10||0-0-0,0,0,0,0,0,0
+1,78,57,77,1,0,0,0,0,64,0,-1--1--1,,1|(1201,846)|
+1,79,58,77,1,0,0,0,0,64,0,-1--1--1,,1|(1372,881)|
+1,80,59,77,1,0,0,0,0,64,0,-1--1--1,,1|(1493,840)|
+1,81,70,77,1,0,0,0,0,64,0,-1--1--1,,1|(1214,883)|
+1,82,71,77,1,0,0,0,0,64,0,-1--1--1,,1|(1322,914)|
+1,83,72,77,1,0,0,0,0,64,0,-1--1--1,,1|(1507,875)|
+1,84,63,30,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1096,719)|
+1,85,77,30,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1275,753)|
+10,86,Exposed Students,989,494,45,23,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|0-0-0,0,0,0,0,0,0
+1,87,89,86,4,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(921,487)|
+1,88,89,5,100,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(867,487)|
+11,89,948,892,487,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,90,Exposing Students,892,514,35,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,91,93,6,4,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1113,487)|
+1,92,93,86,100,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1058,487)|
+11,93,530,1088,487,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,94,Infecting Students,1088,514,34,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,95,Quarantined Infected Students,1410,487,57,27,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|0-0-0,0,0,0,0,0,0
+1,96,98,95,4,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1326,485)|
+1,97,98,6,100,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1262,485)|
+11,98,1102,1293,485,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,99,Quarantining Students,1293,512,49,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,100,102,7,4,0,0,22,3,0,0,0-255-0,|12||0-0-0,1|(1560,481)|
+1,101,102,95,100,0,0,22,3,0,0,0-255-0,|12||0-0-0,1|(1490,481)|
+11,102,1036,1520,481,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,103,Recovering Students,1520,508,42,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,104,106,8,4,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1390,591)|
+1,105,106,95,100,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1390,535)|
+11,106,1168,1390,563,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,107,Dying Students,1454,563,56,11,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,108,29,99,1,0,0,0,0,64,0,-1--1--1,,1|(1269,468)|
+12,109,0,601,927,58,11,8,7,0,2,-1,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+RISK BY STATE
+12,110,0,302,481,99,18,8,135,0,26,-1,0,0,0,-1--1--1,0-0-0,|10|B|0-0-255,0,0,0,0,0,0
+Policy Implementations
+1,111,6,90,1,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1032,564)|
+10,112,Exposed Community,988,333,52,27,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|0-0-0,0,0,0,0,0,0
+1,113,32,103,1,0,0,0,0,64,0,-1--1--1,,1|(1493,437)|
+1,114,46,107,1,0,0,0,0,64,0,-1--1--1,,1|(1464,676)|
+1,115,32,107,1,0,0,0,0,64,0,-1--1--1,,1|(1486,492)|
+1,116,95,107,1,0,0,0,0,64,0,-1--1--1,,1|(1414,533)|
+1,117,95,103,1,0,0,0,0,64,0,-1--1--1,,1|(1462,530)|
+1,118,6,99,1,0,0,0,0,64,0,-1--1--1,,1|(1240,537)|
+10,119,Remote Student Population,658,532,48,15,8,3,0,10,0,0,0,0,-1--1--1,0-0-0,|10||0-128-0,0,0,0,0,0,0
+1,120,119,5,1,0,0,0,0,64,1,-1--1--1,,1|(714,529)|
+10,121,Student to Student Contact Density Fraction,821,606,67,21,8,131,0,10,0,0,0,0,-1--1--1,0-0-0,|10||0-128-0,0,0,0,0,0,0
+1,122,17,94,1,0,0,0,0,64,0,-1--1--1,,1|(1080,565)|
+1,123,121,90,1,0,0,0,0,64,0,-1--1--1,,1|(867,564)|
+1,124,33,90,1,0,0,0,0,64,0,-1--1--1,,1|(708,591)|
+12,125,0,309,433,105,13,8,135,0,26,-1,0,0,0,-1--1--1,0-0-0,|10|B|255-128-0,0,0,0,0,0,0
+Medical Capability Variables
+12,126,0,1651,1226,150,150,3,44,0,0,2,0,0,0,0,0,0,0,0,0
+Quarantined Infected Students,Graph
+1,127,86,94,1,0,0,0,0,64,0,-1--1--1,,1|(1039,545)|
+10,128,Quarantined Community Infections,1408,334,56,26,3,131,0,16,0,2,0,0,-1--1--1,0-0-0,|12|B|0-0-0,0,0,0,0,0,0
+10,129,Community and Student Contact Proportionality Constant,898,428,71,27,8,131,0,10,0,0,0,0,-1--1--1,0-0-0,|10||0-128-0,0,0,0,0,0,0
+1,130,132,112,4,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(917,336)|
+1,131,132,1,100,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(868,336)|
+11,132,486,892,336,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,133,Exposing Residents,892,363,37,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,134,136,2,4,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1116,332)|
+1,135,136,112,100,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1059,332)|
+11,136,420,1084,332,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,137,Infecting Residents,1084,359,37,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,138,140,128,4,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1326,333)|
+1,139,140,2,100,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1268,333)|
+11,140,310,1294,333,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,141,Quarantining Residents,1294,360,49,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,142,144,3,4,0,0,22,3,0,0,0-255-0,|12||0-0-0,1|(1557,335)|
+1,143,144,128,100,0,0,22,3,0,0,0-255-0,|12||0-0-0,1|(1491,335)|
+11,144,354,1524,335,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,145,Recovering Residents,1524,362,42,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,146,148,4,4,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1406,260)|
+1,147,148,128,100,0,0,22,3,0,0,255-0-0,|12||0-0-0,1|(1406,296)|
+11,148,750,1406,278,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,149,Dying Residents,1473,278,59,11,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,150,16,137,1,0,0,0,0,64,0,-1--1--1,,1|(1103,294)|
+1,151,35,133,1,0,0,0,0,64,0,-1--1--1,,1|(803,280)|
+10,152,Resident to Resident Contact Density Fraction,826,239,62,22,8,3,0,10,0,0,0,0,-1--1--1,0-0-0,|10||0-128-0,0,0,0,0,0,0
+1,153,152,133,1,0,0,0,0,64,0,-1--1--1,,1|(892,287)|
+1,154,112,137,1,0,0,0,0,64,0,-1--1--1,,1|(1035,390)|
+1,155,47,149,1,0,0,0,0,64,0,-1--1--1,,1|(1578,249)|
+1,156,2,133,1,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1088,399)|
+1,157,52,2,1,0,0,0,0,64,0,-1--1--1,,1|(1181,387)|
+1,158,129,90,1,0,0,0,0,64,0,-1--1--1,,1|(868,465)|
+1,159,129,133,1,0,0,0,0,64,0,-1--1--1,,1|(839,393)|
+1,160,2,141,1,0,0,0,0,64,0,-1--1--1,,1|(1236,394)|
+1,161,29,141,0,0,0,0,0,64,0,-1--1--1,,1|(1286,403)|
+1,162,32,145,1,0,0,0,0,64,0,-1--1--1,,1|(1462,406)|
+1,163,128,145,1,0,0,0,0,64,0,-1--1--1,,1|(1506,315)|
+1,164,128,149,1,0,0,0,0,64,0,-1--1--1,,1|(1393,312)|
+1,165,32,149,1,0,0,0,0,64,0,-1--1--1,,1|(1456,377)|
+1,166,73,62,1,0,0,0,0,64,0,-1--1--1,,1|(874,1058)|
+1,167,73,61,1,0,0,0,0,64,0,-1--1--1,,1|(934,1029)|
+1,168,73,60,1,0,0,0,0,64,0,-1--1--1,,1|(1000,1010)|
+///---\\\
+:GRAPH Student_Deaths
+:TITLE Student Deaths
+:SCALE
+:VAR Student Deaths
+:L<%^E!@
+1:test.vdfx
+9:test
+23:0
+15:0,0,0,0,0,0
+19:60,0
+27:0,
+34:0,
+42:1
+72:0
+73:0
+4:Time
+5:Community Population
+35:Date
+36:YYYY-MM-DD
+37:2000
+38:1
+39:1
+40:2
+41:0
+76:0
+77:0
+78:0
+79:0
+80:0
+81:0
+24:0
+25:96
+26:96
+75:
+43:
